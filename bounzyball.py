@@ -20,6 +20,7 @@ class Ball:
         paddle_pos = self.canvas.coords(self.paddle.id)
         if pos[2] >= paddle_pos[0] and pos[0] <= paddle_pos[2]:
             if pos[3] >= paddle_pos[1] and pos[3] <= paddle_pos[3]:
+                self.x += self.paddle.x
                 return True
         return False
 
@@ -44,10 +45,12 @@ class Paddle:
         self.canvas.move(self.id, 200, 300)
         self.x = 0
         self.canvas_width = self.canvas.winfo_width()
-        self.started = False
+        self.started = False
+
         self.canvas.bind_all('<KeyPress-Left>', self.turn_left)
         self.canvas.bind_all('<KeyPress-Right>', self.turn_right)
-        self.canvas.bind_all('<Button-1>', self.start_game)
+        self.canvas.bind_all('<Button-1>', self.start_game)
+
 
 
         
