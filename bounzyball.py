@@ -3,9 +3,10 @@ import random
 import time
 
 class Ball:
-    def __init__(self, canvas, paddle, color):
+    def __init__(self, canvas, paddle, score, color):
         self.canvas = canvas
         self.paddle = paddle
+        self.score = score
         self.id = canvas.create_oval(10, 10, 25, 25, fill=color)
         self.canvas.move(self.id, 245, 100)
         starts = [-3, -2, -1, 1, 2, 3]
@@ -21,6 +22,7 @@ class Ball:
         if pos[2] >= paddle_pos[0] and pos[0] <= paddle_pos[2]:
             if pos[3] >= paddle_pos[1] and pos[3] <= paddle_pos[3]:
                 self.x += self.paddle.x
+                self.score.hit()
                 return True
         return False
 
@@ -71,6 +73,18 @@ class Paddle:
     def start_game(self, evt):
         self.started = True
 
+class Score:
+    def __init__(self, canvas, color):
+        self.score = 0
+        self.canvas = canvas
+        self.id = canvas.create_text(450, 10, text=self.score, \
+             fill=color)
+
+    def hit(self):
+        self.score += 1
+        self.canvas.itemconfig(self.id, text=self.score)    
+
+
 tk = Tk()
 tk.title("Game")
 tk.resizable(0, 0)
@@ -79,11 +93,13 @@ canvas = Canvas(tk, width=500, height=400, bd=0, highlightthickness=0)
 canvas.pack()
 tk.update()
 
+score = Score(canvas, 'green')
 paddle = Paddle(canvas, 'blue')
-ball = Ball(canvas, paddle, 'red')
+ball = Ball(canvas, paddle, score, 'red')
 
-while 1:
 
+
+while 1:  
     if ball.hit_bottom == False and paddle.started == True:
         ball.draw()
         paddle.draw()
